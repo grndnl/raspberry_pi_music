@@ -24,12 +24,15 @@ pitft = PiTFT_Screen()
 # Turn it back on
 # pitft.Backlight(True)
 
-# Read button state
-# Button state is True when pressed (i.e. inverts raw state of button)
-state = True
+
+
+def toggle_backlight(channel):
+    """Callback function to toggle the backlight."""
+    pitft.Backlight(not pitft.backlightenabled)
+
+# Set a callback for Button 1 to toggle the backlight
+pitft.Button1Interrupt(callback=toggle_backlight)
 
 while True:
-    if pitft.Button1:
-        print("pressed button 1")
-        pitft.Backlight(state)
-        state = not state
+    print('waiting..')
+    time.sleep(1)
