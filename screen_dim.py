@@ -1,8 +1,11 @@
 from gpiozero import Button
 from signal import pause
 import os
+import subprocess
 
-BUTTON_PIN = 23
+# Pin mappings
+BUTTON_BACKLIGHT = 23  # Button 1
+BUTTON_SHUTDOWN = 18   # Button 4
 BACKLIGHT_PATH = "/sys/class/backlight/soc:backlight/brightness"
 
 # Track backlight state
@@ -21,12 +24,19 @@ def toggle_backlight():
     backlight_on = not backlight_on
     set_backlight(backlight_on)
 
-# Set up the button (BCM pin 23)
-button = Button(BUTTON_PIN, pull_up=True)
-button.when_pressed = toggle_backlight
+def shutdown_pi():
+    print("Shutdown button pressed. Shutting down...")
+    subprocess.run(["sudo", "shutdown", "-h", "now"])
+
+# Setup buttons
+backlight_button = Button(BUTTON_BACKLIGHT, pull_up=True)
+shutdown_button = Button(BUTTON_SHUTDOWN, pull_up=True)
+
+backlight_button.when_pressed = toggle_backlight
+shutdown_button.when_pressed = shutdown_pi
 
 # Turn on backlight at startup
 set_backlight(True)
 
-print("Press Button 1 (GPIO 23) to toggle the backlight.")
+print("Ready: Button 1 toggles screen, Button 4 shuts down.")
 pause()
