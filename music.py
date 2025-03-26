@@ -1,6 +1,7 @@
 from pitftscreen import PiTFT_Screen
 import webbrowser
 import time
+import os
 
 # start browswer
 # URL you want to open
@@ -11,8 +12,12 @@ time.sleep(5)
 
 # Open URL in the default browser
 print("Opening URL")
-webbrowser.open(url)
+# os.system(f"chromium-browser --kiosk {url}")
+chromium_path = '/usr/bin/chromium-browser %s'
+webbrowser.get(chromium_path).open(url)
 
+
+# Screen loop
 pitft = PiTFT_Screen()
 
 # Set a callback
